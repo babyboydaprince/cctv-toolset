@@ -35,9 +35,9 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
   python app/CCTV-Toolset.py
 ```
 
-    > **Note:** On the first run, the tool will automatically;<br> 
-    > install any missing dependencies;<br>
-    > The **flag file (`.installed`)** ensures dependencies are installed only once per environment;
+- **Note:** On the first run, the tool will automatically;
+- install any missing dependencies;
+- The **flag file (`.installed`)** ensures dependencies are installed only once per environment;
 
 ---
 
