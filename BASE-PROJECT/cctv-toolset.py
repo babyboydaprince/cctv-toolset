@@ -6,9 +6,20 @@ import time
 import socket
 from socket import AF_INET, SOCK_STREAM
 from argparse import ArgumentParser, SUPPRESS
-from colorama import Fore, init
-import requests
 
+
+"""DEPENDENCY PRE INIT"""
+def initialize_part_of_dependencies():
+    try:
+        from colorama import Fore, init
+        init(autoreset=True)
+    except ImportError:
+        print("Colorama not found. Installing...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "colorama"])
+        from colorama import Fore, init
+        init(autoreset=True)
+
+DEPENDENCY_FLAG_FILE = ".dependencies_installed"
 required_packages = [
     'termcolor',
     'colorama',
@@ -16,12 +27,13 @@ required_packages = [
     'requests'
 ]
 
+initialize_part_of_dependencies()
+
 class CCTVToolset:
 
     def __init__(self):
         self.os_name = platform.system()
         self.s = socket.socket(AF_INET, SOCK_STREAM)
-        self.banner()
         self.install_missing_packages(required_packages)
         self.main()
 
@@ -29,50 +41,22 @@ class CCTVToolset:
     def banner():
         from pyfiglet import Figlet
         from termcolor import cprint
+        from colorama import init
         init()
         f = Figlet(font='slant')
         print('\n')
         cprint(f.renderText('   C C T V'), 'magenta')
         cprint(f.renderText(' T o o l s e t'), 'blue')
-        print('\n')
         print('  ****************** Made by: BraiNiac ******************')
         print('\n')
 
-    @staticmethod
-    def is_package_installed(package_name):
-        try:
-            import importlib
-            importlib.import_module(package_name)
-            return True
-        except ImportError:
-            return False
-
-    def install_missing_packages(self, packages):
-        from colorama import Fore
-        checkmark = '\u2713'
-
-        try:
-            missing_packages = [pkg for pkg in packages if not self.is_package_installed(pkg)]
-            if missing_packages:
-                self.banner()
-                print("\n")
-                print(f"Installing missing packages: {', '.join(missing_packages)}")
-                subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing_packages])
-                print(f'\nInstallation finished. {Fore.GREEN}[{checkmark}]{Fore.RESET}')
-                time.sleep(2)
-                os.system('cls' if self.os_name == 'Windows' else 'clear')
-            else:
-                print(f'\n             Requirements already installed. {Fore.GREEN}[{checkmark}]{Fore.RESET}')
-                time.sleep(2)
-                os.system('cls' if self.os_name == 'Windows' else 'clear')
-        except Exception as ex:
-            print('\nAn exception occurred: \n', ex)
-
     def main(self):
+        from colorama import Fore
+
         parser = ArgumentParser(
             description='''-------- Swiss army knife for CCTV & RTSP Pentesting --------''',
-            usage='python rtsp-toolset.py --help',
-            epilog='python rtsp-toolset.py '
+            usage='python app.py --help',
+            epilog='python app.py '
                    '--target-ip [IP] '
                    '--target-port [PORT] '
                    '--connection-test [Use provided SOCKET + Send HTTP request]',
@@ -156,9 +140,14 @@ class CCTVToolset:
         if len(sys.argv) == 1:
             self.banner()
             parser.print_help()
+            print("\n")
             sys.exit(0)
 
         args = parser.parse_args()
+
+        if args.help:
+            self.banner()
+            print("\n")
 
         if not args.target_ip or not args.target_port:
             self.banner()
@@ -175,10 +164,14 @@ class CCTVToolset:
                 and args.file_name):
 
             if args.user and args.user_wordlist:
+                self.banner()
+                print("\n")
                 print(Fore.RED + "[-] ERROR: Use either --user or --user-wordlist, not both." + Fore.RESET)
                 sys.exit(1)
 
             if not args.user and not args.user_wordlist:
+                self.banner()
+                print("\n")
                 print(Fore.RED + "[-] ERROR: Either --user or --user-wordlist must be provided." + Fore.RESET)
                 sys.exit(1)
 
@@ -192,11 +185,16 @@ class CCTVToolset:
                             args.user_wordlist, args.password_wordlist,
                             args.out_file_path, args.file_name)
         else:
+            self.banner()
+            print("\n")
+
             print(Fore.RED + "[-] ERROR: Missing required arguments for brute-force." + Fore.RESET)
             sys.exit(1)
 
     def rtsp_connect_test(self, camera_ip, camera_port):
         """Test connection to the RTSP server."""
+        from colorama import Fore, init
+
         init()
         describe_request = (
             f"DESCRIBE rtsp://{camera_ip}:{camera_port} RTSP/1.0\r\n"
@@ -231,6 +229,9 @@ class CCTVToolset:
     def rtsp_brute(target_device_ip, target_device_port, set_delay, username,
                    user_wordlist, pass_wordlist, output_file_path, outputs_file_name):
         """Brute-force RTSP credentials."""
+        from colorama import Fore, init
+        import requests
+
         init()
         set_delay_converted = float(set_delay)
         exec_time = time.strftime("%Y/%m/%d %H:%M:%S")
@@ -350,8 +351,63 @@ class CCTVToolset:
                 + Fore.RED + "[-] " + Fore.RESET + f"Error message: {e}"
             )
 
+    @staticmethod
+    def is_package_installed(package_name):
+        try:
+            import importlib.util
+            spec = importlib.util.find_spec(package_name)
+            return spec is not None
+        except (ImportError, AttributeError):
+            return False
+
+    def install_missing_packages(self, packages):
+        checkmark = '\u2713'
+        missing_packages = [pkg for pkg in packages if not self.is_package_installed(pkg)]
+
+        if missing_packages:
+            try:
+                print("\n")
+                print("       ********** SETTING UP CCTV TOOLSET **********")
+                print(f"\nInstalling missing packages: {', '.join(missing_packages)}\n\n")
+
+                try:
+                    subprocess.check_call([sys.executable, '-m', 'pip', '--version'])
+                except (subprocess.CalledProcessError, FileNotFoundError):
+                    print(f"\nError: pip is not installed or not found in your system! Please install it first.")
+                    sys.exit(1)
+
+                subprocess.check_call([sys.executable, '-m', 'pip', 'install', *missing_packages])
+
+                from colorama import Fore
+                print(f'\nInstallation finished. {Fore.GREEN}[{checkmark}]{Fore.RESET}')
+                time.sleep(2)
+                os.system('cls' if self.os_name == 'Windows' else 'clear')
+
+                for pkg in missing_packages:
+                    if not self.is_package_installed(pkg):
+                        print(f"\n{Fore.RED}[!] Error: Package {pkg} failed to install. Please check your internet connection and try again manually with: 'pip install {pkg}'{Fore.RESET}")
+                        sys.exit(1)
+
+            except subprocess.CalledProcessError as e:
+                print(f'\nAn exception occurred while installing packages: {e}')
+                print(f"Installation of one or more packages failed. Check the error message above and try again manually.")
+                sys.exit(1)
+            except Exception as ex:
+                print('\nAn exception occurred: \n', ex)
+                sys.exit(1)
+        else:
+            from colorama import Fore
+            print(f'\n             Requirements already installed. {Fore.GREEN}[{checkmark}]{Fore.RESET}')
+            time.sleep(4)
+            os.system('cls' if self.os_name == 'Windows' else 'clear')
+            self.banner()
+            print(f'\n             {Fore.GREEN}******{Fore.RESET} Now you are all set! {Fore.GREEN}******{Fore.RESET}')
+            time.sleep(4)
+            os.system('cls' if self.os_name == 'Windows' else 'clear')
 
 if __name__ == '__main__':
     """MAIN RUNNER"""
+    from colorama import Fore, init
+    init()
     os.system('clear' if platform.system() != 'Windows' else 'cls')
     CCTVToolset()
