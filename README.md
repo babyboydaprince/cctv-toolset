@@ -5,7 +5,7 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
 ---
 
 
-<img src="./img/banner_pic.png" width="610">
+<img src="./img/banner_pic.png" width="885">
 
 
 
