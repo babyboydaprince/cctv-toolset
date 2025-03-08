@@ -36,7 +36,7 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
 ```
 
 - **Note:** On the first run, the tool will automatically;
-- install any missing dependencies;
+- Install any missing dependencies;
 - The **flag file (`.installed`)** ensures dependencies are installed only once per environment;
 
 ---
@@ -46,7 +46,7 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
 ### 🧪 RTSP Connection Test
 
 This option tests the connectivity to the specified RTSP server 
-and displays the server's response.
+and displays the server's response:
 
 ```bash
   python app/CCTV-Toolset.py -t <target-ip> -p <target-port> --connection-test
@@ -64,7 +64,7 @@ and displays the server's response.
 ### 🔑 RTSP authentication tester
 
 This option performs various attempts onto the specified RTSP server, 
-attempting to find valid credentials combinations, just so it's possible to guarantee
+attempting to find valid credentials combinations, just so it's feasible to guarantee
 that the secure authentication method/logic is robust and does not leak data or credentials.
 
 ```bash
