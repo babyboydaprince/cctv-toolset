@@ -15,7 +15,7 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
 -   **Authentication test module (Brute-Force):** Test robustness of your secure authentication mechanism that is integrated with RTSP protocol using customizable wordlists.
 -   **Clean Architecture:**  Built with a modular design, maintainable, scalable.
 -   **Dependency Management:** Automated dependencies installation on first run.
--   **Detailed Output:** Saves successful Auth testsresults to a file for later review.
+-   **Detailed Output:** Saves successful Auth tests results to a file for later review.
 -   **User-Friendly Interface:**  Command-line interface (CLI) with clear help messages and argument handling.
 
 ---
@@ -35,9 +35,9 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
   python app/CCTV-Toolset.py
 ```
 
-    > **Note:** On the first run, the tool will automatically;<br> 
-    > install any missing dependencies;<br>
-    > The **flag file (`.installed`)** ensures dependencies are installed only once per environment;
+- **Note:** On the first run, the tool will automatically;
+- Install any missing dependencies;
+- The **flag file (`.installed`)** ensures dependencies are installed only once per environment;
 
 ---
 
@@ -46,7 +46,7 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
 ### 🧪 RTSP Connection Test
 
 This option tests the connectivity to the specified RTSP server 
-and displays the server's response.
+and displays the server's response:
 
 ```bash
   python app/CCTV-Toolset.py -t <target-ip> -p <target-port> --connection-test
@@ -64,7 +64,7 @@ and displays the server's response.
 ### 🔑 RTSP authentication tester
 
 This option performs various attempts onto the specified RTSP server, 
-attempting to find valid credentials combinations, just so it's possible to guarantee
+attempting to find valid credentials combinations, just so it's feasible to guarantee
 that the secure authentication method/logic is robust and does not leak data or credentials.
 
 ```bash
