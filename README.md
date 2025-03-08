@@ -15,7 +15,7 @@ A versatile toolkit for CCTV and RTSP pentesting, designed with modularity and e
 -   **Authentication test module (Brute-Force):** Test robustness of your secure authentication mechanism that is integrated with RTSP protocol using customizable wordlists.
 -   **Clean Architecture:**  Built with a modular design, maintainable, scalable.
 -   **Dependency Management:** Automated dependencies installation on first run.
--   **Detailed Output:** Saves successful Auth testsresults to a file for later review.
+-   **Detailed Output:** Saves successful Auth tests results to a file for later review.
 -   **User-Friendly Interface:**  Command-line interface (CLI) with clear help messages and argument handling.
 
 ---
